@@ -1,4 +1,4 @@
-local ccvs = require("cc.vs")
+local ccvs = require("cc_vs")
 
 -- === CONFIGURATION ===
 local targetPos = vector.new(100, 330, 100) -- Destination coordinates
@@ -46,3 +46,4 @@ while true do
   print("Returned to origin. Waiting...")
   sleep(waitTime)
 end
+
