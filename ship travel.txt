@@ -1,0 +1,48 @@
+local ccvs = require("cc.vs")
+
+-- === CONFIGURATION ===
+local targetPos = vector.new(100, 330, 100) -- Destination coordinates
+local waitTime = 5 -- seconds to wait at destination and origin
+
+-- === FUNCTIONS ===
+
+-- Gets the ship's current world position
+local function getWorldPosition(ship)
+  local pos = ship:getGlobalTransform().position
+  return vector.new(pos.x, pos.y, pos.z)
+end
+
+-- Moves the ship to a given position, ascending to y = 330 first
+local function goTo(ship, destination)
+  local current = getWorldPosition(ship)
+
+  -- Always ascend to y=330 first
+  if current.y < 330 then
+    local highPos = vector.new(current.x, 330, current.z)
+    print("Ascending to y = 330...")
+    ship:navigateTo(highPos)
+    ship:waitForArrival()
+  end
+
+  print("Navigating to destination:", destination)
+  ship:navigateTo(destination)
+  ship:waitForArrival()
+end
+
+-- === MAIN LOOP ===
+local ship = ccvs.ship()
+
+local origin = getWorldPosition(ship)
+origin = vector.new(origin.x, 330, origin.z) -- ensure return is also to y = 330
+
+while true do
+  -- Go to target
+  goTo(ship, targetPos)
+  print("Arrived at destination. Waiting...")
+  sleep(waitTime)
+
+  -- Return to origin
+  goTo(ship, origin)
+  print("Returned to origin. Waiting...")
+  sleep(waitTime)
+end
